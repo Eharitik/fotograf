@@ -627,18 +627,26 @@
         transform var(--transition);
     }
 
-    /* Unique top accent bar per card */
+    @keyframes bar-shimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Unique top accent bar per card with shimmer */
     .service-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 3px;
       border-radius: var(--radius-md) var(--radius-md) 0 0;
+      background-size: 300% 100%;
+      animation: bar-shimmer 3.5s ease-in-out infinite;
     }
-    .service-card:nth-child(1)::before { background: linear-gradient(90deg, #c9a84c, #f0d07a); }
-    .service-card:nth-child(2)::before { background: linear-gradient(90deg, #e07b8a, #f0a0ae); }
-    .service-card:nth-child(3)::before { background: linear-gradient(90deg, #6aabcf, #91c9e8); }
-    .service-card:nth-child(4)::before { background: linear-gradient(90deg, #5eba8a, #82d4a8); }
+    .service-card:nth-child(1)::before { background-image: linear-gradient(90deg, #e8c96a, #c9a84c, #7a5520, #c9a84c, #e8c96a); }
+    .service-card:nth-child(2)::before { background-image: linear-gradient(90deg, #f0a0ae, #e07b8a, #8a3040, #e07b8a, #f0a0ae); }
+    .service-card:nth-child(3)::before { background-image: linear-gradient(90deg, #91c9e8, #6aabcf, #2a5a7a, #6aabcf, #91c9e8); }
+    .service-card:nth-child(4)::before { background-image: linear-gradient(90deg, #82d4a8, #5eba8a, #1e6640, #5eba8a, #82d4a8); }
 
     .service-card:hover {
       border-color: rgba(255,255,255,0.12);
@@ -1169,6 +1177,45 @@
       color: #1a1008;
     }
     [data-theme="light"] .contact__quote { color: rgba(139,90,43,0.04); }
+
+    /* Light theme: reset service cards to original styling */
+    [data-theme="light"] .services { background: var(--bg-secondary); }
+    [data-theme="light"] .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--accent-dim);
+    }
+    [data-theme="light"] .service-card::before { display: none; }
+    [data-theme="light"] .service-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 30px rgba(139,90,43,0.14), 0 8px 28px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
+    }
+    [data-theme="light"] .service-card:nth-child(1):hover,
+    [data-theme="light"] .service-card:nth-child(2):hover,
+    [data-theme="light"] .service-card:nth-child(3):hover,
+    [data-theme="light"] .service-card:nth-child(4):hover {
+      box-shadow: 0 0 30px rgba(139,90,43,0.14), 0 8px 28px rgba(0,0,0,0.12);
+    }
+    [data-theme="light"] .service-card__icon {
+      background: rgba(139,90,43,0.08);
+      border: 1px solid rgba(139,90,43,0.18);
+    }
+    [data-theme="light"] .service-card:nth-child(1) .service-card__icon,
+    [data-theme="light"] .service-card:nth-child(2) .service-card__icon,
+    [data-theme="light"] .service-card:nth-child(3) .service-card__icon,
+    [data-theme="light"] .service-card:nth-child(4) .service-card__icon {
+      background: rgba(139,90,43,0.08);
+      border: 1px solid rgba(139,90,43,0.18);
+    }
+    [data-theme="light"] .service-card .btn-outline {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    [data-theme="light"] .service-card .btn-outline:hover {
+      background: #d4b896;
+      color: #1a1008;
+      box-shadow: 0 0 20px rgba(139,90,43,0.3);
+    }
 
     /* ─────────────────────────────────────────────
        NAV CONTROLS (language + theme)
@@ -2263,9 +2310,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileOverlay = document.createElement('div');
     mobileOverlay.style.cssText = [
       'position:fixed;inset:0;background:rgba(10,10,10,0.96);backdrop-filter:blur(12px)',
-      'z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:32px',
+      'z-index:1002;display:none;flex-direction:column;align-items:center;justify-content:center;gap:32px',
       'transform:translateY(-100%);transition:transform .4s cubic-bezier(.4,0,.2,1)'
     ].join(';');
+
+    /* dedicated × close button inside overlay */
+    const closeBtn = document.createElement('button');
+    closeBtn.setAttribute('aria-label', 'Zamknij menu');
+    closeBtn.style.cssText = [
+      'position:absolute;top:22px;right:22px',
+      'background:none;border:1px solid rgba(255,255,255,0.25);border-radius:50%',
+      'color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;width:44px;height:44px',
+      'display:flex;align-items:center;justify-content:center',
+      'transition:background .2s,border-color .2s'
+    ].join(';');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.addEventListener('mouseenter', () => { closeBtn.style.background = 'rgba(255,255,255,0.12)'; closeBtn.style.borderColor = 'rgba(255,255,255,0.5)'; });
+    closeBtn.addEventListener('mouseleave', () => { closeBtn.style.background = 'none'; closeBtn.style.borderColor = 'rgba(255,255,255,0.25)'; });
+    closeBtn.addEventListener('click', closeMobileMenu);
+    mobileOverlay.appendChild(closeBtn);
 
     [
       ['nav.about',     '#about',     'O mnie'],
@@ -2293,16 +2356,10 @@ document.addEventListener('DOMContentLoaded', () => {
       menuOpen = true;
       mobileOverlay.style.display = 'flex';
       requestAnimationFrame(() => requestAnimationFrame(() => { mobileOverlay.style.transform = 'translateY(0)'; }));
-      const sp = ham.querySelectorAll('span');
-      sp[0].style.transform = 'translateY(7px) rotate(45deg)';
-      sp[1].style.opacity = '0';
-      sp[2].style.transform = 'translateY(-7px) rotate(-45deg)';
     }
     function closeMobileMenu() {
       menuOpen = false;
       mobileOverlay.style.transform = 'translateY(-100%)';
-      const sp = ham.querySelectorAll('span');
-      sp[0].style.transform = 'none'; sp[1].style.opacity = '1'; sp[2].style.transform = 'none';
       setTimeout(() => { if (!menuOpen) mobileOverlay.style.display = 'none'; }, 400);
     }
     ham.addEventListener('click', () => menuOpen ? closeMobileMenu() : openMobileMenu());
