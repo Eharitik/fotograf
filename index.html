@@ -1257,14 +1257,15 @@
     }
     .about__cta { margin-top: 36px; text-align: center; }
 
-    /* Word-by-word animation */
-    .word-animate .word {
-      display: inline-block;
+    /* Paragraph reveal animation */
+    .word-animate {
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .word-animate.words-visible .word {
+    .word-animate.words-visible {
       opacity: 1;
+      transform: translateY(0);
     }
 
     .about__stats {
@@ -1410,16 +1411,12 @@
     @media (max-width: 768px) {
       :root { --section-pad: 70px 0; }
 
-      .nav__links {
-        gap: 24px;
-      }
+      .nav__logo { font-size: 1.2rem; }
+      .nav__links { gap: 18px; font-size: 0.85rem; }
 
-      .word-animate .word {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
-        transition-delay: 0s !important;
-      }
+      .hero__content { padding: 80px 20px 60px; }
+
+      .about__photo { max-width: 340px; margin: 0 auto; }
 
       .portfolio-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1445,6 +1442,10 @@
         gap: 48px;
       }
 
+      .contact__quote {
+        font-size: clamp(3rem, 12vw, 6rem);
+      }
+
       .footer__inner {
         flex-direction: column;
         text-align: center;
@@ -1454,15 +1455,32 @@
     }
 
     @media (max-width: 540px) {
-      .portfolio-grid { grid-template-columns: 1fr; grid-template-rows: none; height: auto; }
-      .portfolio-card { min-height: 200px; }
-      .word-animate .word { transform: none; transition: opacity 0.4s ease; }
-      .word-animate.words-visible .word { opacity: 1; transform: none; }
-      .services-cards { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
-      .reviews-grid { grid-template-columns: 1fr; }
-      .about__stats { grid-template-columns: repeat(2, 1fr); }
+      :root { --section-pad: 50px 0; }
+
+      .nav__logo { font-size: 1.1rem; }
       .nav__links { display: none; }
       .nav-controls { margin-left: 0; }
+
+      .hero__content { padding: 60px 16px 50px; }
+
+      .about__photo { max-width: 100%; }
+      .about__stats { grid-template-columns: repeat(2, 1fr); }
+
+      .portfolio-grid { grid-template-columns: 1fr; grid-template-rows: none; height: auto; }
+      .portfolio-card { min-height: 200px; }
+
+      .services-cards { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
+
+      .pricing-grid { max-width: 100%; }
+
+      .reviews-grid { grid-template-columns: 1fr; }
+
+      .contact__quote { font-size: clamp(2.5rem, 18vw, 5rem); }
+    }
+
+    @media (max-width: 360px) {
+      .about__stats { grid-template-columns: 1fr; }
+      .nav-controls { gap: 6px; }
     }
   </style>
 </head>
@@ -2374,16 +2392,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── WORD-BY-WORD ANIMATION ───────────────────────────────────────────────
+  // ── PARAGRAPH REVEAL ANIMATION ───────────────────────────────────────────────
   function initWordAnimation() {
-    document.querySelectorAll('.word-animate').forEach(el => {
-      const text = el.textContent.trim();
-      const words = text.split(/\s+/);
-      el.innerHTML = words.map((w, i) =>
-        `<span class="word" style="transition-delay:${(i * 0.055).toFixed(2)}s">${w}</span>`
-      ).join(' ');
-    });
-
     const wordObserver = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -2391,7 +2401,7 @@ document.addEventListener('DOMContentLoaded', () => {
           wordObserver.unobserve(e.target);
         }
       });
-    }, { threshold: 0.25 });
+    }, { threshold: 0.15 });
 
     document.querySelectorAll('.word-animate').forEach(el => wordObserver.observe(el));
   }
@@ -2544,17 +2554,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (dict[key] === undefined) return;
-      if (el.classList.contains('word-animate')) {
-        const wasVisible = el.classList.contains('words-visible');
-        el.classList.remove('words-visible');
-        const words = dict[key].split(/\s+/);
-        el.innerHTML = words.map((w, i) =>
-          `<span class="word" style="transition-delay:${(i * 0.055).toFixed(2)}s">${w}</span>`
-        ).join(' ');
-        if (wasVisible) requestAnimationFrame(() => el.classList.add('words-visible'));
-      } else {
-        el.textContent = dict[key];
-      }
+      el.textContent = dict[key];
     });
 
     document.querySelectorAll('[data-i18n-html]').forEach(el => {
