@@ -929,6 +929,29 @@
       color: var(--accent);
     }
 
+    .back-to-top {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+      text-decoration: none;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px var(--accent-glow), 0 0 0 3px rgba(201, 168, 76, 0.18);
+      transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+    }
+    .back-to-top:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 8px 36px var(--accent-glow), 0 0 0 5px rgba(201, 168, 76, 0.25), 0 0 60px rgba(201, 168, 76, 0.22);
+      transform: translateY(-4px);
+    }
+
     .footer__copy {
       font-size: 0.8125rem;
       color: var(--text-muted);
@@ -1257,17 +1280,6 @@
     }
     .about__cta { margin-top: 36px; text-align: center; }
 
-    /* Paragraph reveal animation */
-    .word-animate {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .word-animate.words-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     .about__stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -1344,14 +1356,13 @@
       line-height: 1.78;
       font-style: italic;
       flex: 1;
-      margin-bottom: 24px;
     }
     .review-card__author {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-bottom: 16px;
-      margin-bottom: 4px;
+      padding-bottom: 14px;
+      margin-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
     }
     .review-card__avatar {
@@ -1571,13 +1582,13 @@
               Witaj, jestem<br><em>Katarzyna</em>
             </h2>
 
-            <p class="about__text word-animate" data-animate data-i18n="about.p1">
+            <p class="about__text" data-animate data-i18n="about.p1">
               Jestem fotografem z pasją do chwil, których nie można odwrócić. Od ponad 2 lat towarzyszę ludziom w wyjątkowych momentach ich życia — urodziny, sesje studyjne, portrety i plenery miejskie.
             </p>
-            <p class="about__text word-animate" data-animate data-i18n="about.p2">
+            <p class="about__text" data-animate data-i18n="about.p2">
               Wierzę, że każde zdjęcie to nie tylko obraz — to emocja zamknięta w kadrze na zawsze. Nie reżyseruję — obserwuję, czekam i wychwytam moment, który mówi więcej niż tysiąc słów.
             </p>
-            <p class="about__text word-animate" data-animate data-i18n="about.p3">
+            <p class="about__text" data-animate data-i18n="about.p3">
               Zaufało mi już ponad 200 zadowolonych klientów. Pozwól, że Twoja historia stanie się kolejnym pięknym rozdziałem w moim obiektywie.
             </p>
             <div class="about__cta" data-animate>
@@ -1943,7 +1954,7 @@
         <div class="footer__accent-line" aria-hidden="true"></div>
         <p class="footer__copy" data-i18n="footer.copy">© 2026 Fotograf. Wszystkie prawa zastrzeżone.</p>
         <div class="footer__accent-line" aria-hidden="true"></div>
-        <a href="#hero" class="footer__logo" aria-label="Wróć na górę">↑</a>
+        <a href="#hero" class="back-to-top" aria-label="Wróć na górę">↑</a>
       </div>
     </div>
   </footer>
@@ -2312,20 +2323,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── PARAGRAPH REVEAL ANIMATION ───────────────────────────────────────────────
-  function initWordAnimation() {
-    const wordObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('words-visible');
-          wordObserver.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.word-animate').forEach(el => wordObserver.observe(el));
-  }
-  initWordAnimation();
 
   // ── SMOOTH SCROLL FOR ALL INTERNAL LINKS ─────────────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(link => {
