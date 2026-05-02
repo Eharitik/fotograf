@@ -1327,14 +1327,11 @@
       transform: translateY(-5px);
       box-shadow: 0 16px 44px rgba(0,0,0,0.35);
     }
-    .review-card__top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .review-stars { color: var(--accent); font-size: 0.85rem; letter-spacing: 2px; }
+    .review-stars { color: var(--accent); font-size: 0.85rem; letter-spacing: 2px; margin: 10px 0 14px; display: block; }
     .review-quote {
+      display: none;
+    }
+    .review-card__top-hidden {
       font-family: var(--font-heading);
       font-size: 3.2rem;
       color: var(--accent-dim);
@@ -1353,8 +1350,9 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--border-subtle);
     }
     .review-card__avatar {
       width: 42px; height: 42px;
@@ -1415,6 +1413,7 @@
       .nav__links { gap: 18px; font-size: 0.85rem; }
 
       .hero__content { padding: 80px 20px 60px; }
+      .hero__scroll-hint { display: none; }
 
       .about__photo { max-width: 340px; margin: 0 auto; }
 
@@ -1544,7 +1543,7 @@
       </div>
 
       <div class="hero__scroll-hint" aria-hidden="true">
-        <span>Przewiń</span>
+        <span data-i18n="hero.scroll">Przewiń</span>
         <div class="hero__scroll-line"></div>
       </div>
     </section>
@@ -1801,138 +1800,84 @@
         <div class="reviews-grid animate-on-scroll" data-stagger>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Aleksander uchwycił każdą emocję naszego ślubu z niesamowitą precyzją. Zdjęcia przekroczyły nasze oczekiwania — to wspomnienia na całe życie. Polecam każdemu bez zastanowienia!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">KW</div>
-              <div>
-                <div class="review-card__name">Karolina Wiśniewska</div>
-                <div class="review-card__type">Wesele</div>
-              </div>
+              <div><div class="review-card__name">Karolina Wiśniewska</div><div class="review-card__type">Wesele</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Aleksander uchwycił każdą emocję naszego ślubu z niesamowitą precyzją. Zdjęcia przekroczyły nasze oczekiwania — to wspomnienia na całe życie. Polecam każdemu bez zastanowienia!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Profesjonalne podejście, świetna atmosfera i efekt końcowy, który zachwycił mnie i całą rodzinę. Naprawdę wie jak wydobyć z człowieka to, co najlepsze. Rewelacja!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">MK</div>
-              <div>
-                <div class="review-card__name">Marek Kowalski</div>
-                <div class="review-card__type">Sesja studyjna</div>
-              </div>
+              <div><div class="review-card__name">Marek Kowalski</div><div class="review-card__type">Sesja studyjna</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Profesjonalne podejście, świetna atmosfera i efekt końcowy, który zachwycił mnie i całą rodzinę. Naprawdę wie jak wydobyć z człowieka to, co najlepsze. Rewelacja!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Zdjęcia z urodzin mojego syna są absolutnie piękne. Każde ujęcie pełne naturalnych emocji i radości. Aleksander ma wyjątkowy talent do pracy z dziećmi. Serdecznie polecam!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">AN</div>
-              <div>
-                <div class="review-card__name">Anna Nowak</div>
-                <div class="review-card__type">Urodziny</div>
-              </div>
+              <div><div class="review-card__name">Anna Nowak</div><div class="review-card__type">Urodziny</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Zdjęcia z urodzin mojego syna są absolutnie piękne. Każde ujęcie pełne naturalnych emocji i radości. Aleksander ma wyjątkowy talent do pracy z dziećmi. Serdecznie polecam!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Od pierwszego kontaktu czułem profesjonalizm i pasję. Nasze zdjęcia ślubne to prawdziwe dzieła sztuki. Każde zdjęcie opowiada inną część naszej historii. Dziękujemy!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">PZ</div>
-              <div>
-                <div class="review-card__name">Piotr Zieliński</div>
-                <div class="review-card__type">Wesele</div>
-              </div>
+              <div><div class="review-card__name">Piotr Zieliński</div><div class="review-card__type">Wesele</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Od pierwszego kontaktu czułem profesjonalizm i pasję. Nasze zdjęcia ślubne to prawdziwe dzieła sztuki. Każde zdjęcie opowiada inną część naszej historii. Dziękujemy!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Sesja plenerowa w centrum miasta przeszła moje oczekiwania. Aleksander ma niesamowity talent do znajdowania pięknych kadrów w codziennych miejscach. Polecam z całego serca!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">MW</div>
-              <div>
-                <div class="review-card__name">Marta Wójcik</div>
-                <div class="review-card__type">Plener miejski</div>
-              </div>
+              <div><div class="review-card__name">Marta Wójcik</div><div class="review-card__type">Plener miejski</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Sesja plenerowa w centrum miasta przeszła moje oczekiwania. Aleksander ma niesamowity talent do znajdowania pięknych kadrów w codziennych miejscach. Polecam z całego serca!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Czarne tło, dramatyczne oświetlenie, zdjęcia jak z okładki magazynu. Klimat sesji studyjnej był absolutnie wyjątkowy. Wróciłem już trzy razy i wrócę znowu!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">TL</div>
-              <div>
-                <div class="review-card__name">Tomasz Lewandowski</div>
-                <div class="review-card__type">Studio</div>
-              </div>
+              <div><div class="review-card__name">Tomasz Lewandowski</div><div class="review-card__type">Studio</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Czarne tło, dramatyczne oświetlenie, zdjęcia jak z okładki magazynu. Klimat sesji studyjnej był absolutnie wyjątkowy. Wróciłem już trzy razy i wrócę znowu!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Nigdy wcześniej nie czułam się tak swobodnie przed obiektywem. Aleksander potrafi sprawić, że zapominasz o aparacie i po prostu jesteś sobą. Efekt — zachwycający.</p>
             <div class="review-card__author">
               <div class="review-card__avatar">ZK</div>
-              <div>
-                <div class="review-card__name">Zofia Kamińska</div>
-                <div class="review-card__type">Portret</div>
-              </div>
+              <div><div class="review-card__name">Zofia Kamińska</div><div class="review-card__type">Portret</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Nigdy wcześniej nie czułam się tak swobodnie przed obiektywem. Aleksander potrafi sprawić, że zapominasz o aparacie i po prostu jesteś sobą. Efekt — zachwycający.</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Nasze wesele uwiecznione do perfekcji. Nie wyobrażam sobie, że mógłby to zrobić ktoś inny. Każde zdjęcie to inna, piękna chwila naszego wspólnego dnia. Dziękujemy!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">RS</div>
-              <div>
-                <div class="review-card__name">Rafał Szymański</div>
-                <div class="review-card__type">Wesele</div>
-              </div>
+              <div><div class="review-card__name">Rafał Szymański</div><div class="review-card__type">Wesele</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Nasze wesele uwiecznione do perfekcji. Nie wyobrażam sobie, że mógłby to zrobić ktoś inny. Każde zdjęcie to inna, piękna chwila naszego wspólnego dnia. Dziękujemy!</p>
           </div>
 
           <div class="review-card">
-            <div class="review-card__top">
-              <div class="review-stars">★★★★★</div>
-              <div class="review-quote">"</div>
-            </div>
-            <p class="review-card__text">Sesja rodzinna z trójką małych dzieci to wyzwanie — ale Aleksander poradził sobie znakomicie. Naturalne, radosne, pełne życia zdjęcia. Dokładnie to, o czym marzyłam!</p>
             <div class="review-card__author">
               <div class="review-card__avatar">AD</div>
-              <div>
-                <div class="review-card__name">Agnieszka Dąbrowska</div>
-                <div class="review-card__type">Sesja rodzinna</div>
-              </div>
+              <div><div class="review-card__name">Agnieszka Dąbrowska</div><div class="review-card__type">Sesja rodzinna</div></div>
             </div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-card__text">Sesja rodzinna z trójką małych dzieci to wyzwanie — ale Aleksander poradził sobie znakomicie. Naturalne, radosne, pełne życia zdjęcia. Dokładnie to, o czym marzyłam!</p>
           </div>
 
         </div>
@@ -2028,32 +1973,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.opacity = '1';
   }));
 
-  // ── 2. TEXT SCRAMBLE (hero headline) ─────────────────────────────────────
-  const heroHeadline = document.querySelector('.hero h1');
-  if (heroHeadline) {
-    const finalText = heroHeadline.innerText;
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    const duration = 1600;
-    const start = performance.now();
-    const savedHTML = heroHeadline.innerHTML;
-
-    function scramble(now) {
-      const p = Math.min((now - start) / duration, 1);
-      const resolved = Math.floor(p * finalText.length);
-      let out = '';
-      for (let i = 0; i < finalText.length; i++) {
-        if (i < resolved || finalText[i] === ' ' || finalText[i] === '\n') {
-          out += finalText[i];
-        } else {
-          out += chars[Math.floor(Math.random() * chars.length)];
-        }
-      }
-      heroHeadline.innerText = out;
-      if (p < 1) requestAnimationFrame(scramble);
-      else heroHeadline.innerHTML = savedHTML;
-    }
-    setTimeout(() => requestAnimationFrame(scramble), 400);
-  }
+  // ── 2. TEXT SCRAMBLE — removed (broke multilingual + special chars) ────────
 
   // ── 3. SMOOTH SCROLL + ACTIVE NAV ────────────────────────────────────────
   const navLinks = document.querySelectorAll('nav a[href^="#"]');
@@ -2433,7 +2353,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'hero.eyebrow':'Profesjonalna fotografia',
       'hero.title':'Twoja historia zasługuje<br>na <em>idealne&nbsp;zdjęcia</em>',
       'hero.subtitle':'Każdy moment jest wyjątkowy. Utrwalam go z pasją, precyzją i artystyczną wrażliwością — tak, abyś mógł wracać do niego przez całe życie.',
-      'hero.cta':'Zobacz portfolio',
+      'hero.cta':'Zobacz portfolio','hero.scroll':'Przewiń',
       'section.portfolio':'Portfólio','section.services':'Usługi',
       'section.pricing':'Cennik sesji','section.reviews':'Opinie','section.contact':'Kontakt',
 
@@ -2464,7 +2384,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'hero.eyebrow':'Профессиональная фотография',
       'hero.title':'Твоя история заслуживает<br><em>идеальных снимков</em>',
       'hero.subtitle':'Каждый момент уникален. Я запечатляю его с страстью, точностью и художественным чутьём — чтобы ты мог возвращаться к нему всю жизнь.',
-      'hero.cta':'Смотреть портфолио',
+      'hero.cta':'Смотреть портфолио','hero.scroll':'Прокрути',
       'section.portfolio':'Портфолио','section.services':'Услуги',
       'section.pricing':'Прайс-лист','section.reviews':'Отзывы','section.contact':'Контакт',
       'service.wedding.title':'Свадьбы',
@@ -2494,7 +2414,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'hero.eyebrow':'Професійна фотографія',
       'hero.title':'Твоя історія заслуговує<br><em>ідеальних знімків</em>',
       'hero.subtitle':'Кожен момент унікальний. Я фіксую його з пристрастю, точністю і художнім чуттям — щоб ти міг повертатися до нього все життя.',
-      'hero.cta':'Дивитись портфоліо',
+      'hero.cta':'Дивитись портфоліо','hero.scroll':'Прокрути',
       'section.portfolio':'Портфоліо','section.services':'Послуги',
       'section.pricing':'Прайс-лист','section.contact':'Контакт',
       'service.wedding.title':'Весілля',
@@ -2524,7 +2444,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'hero.eyebrow':'Professional Photography',
       'hero.title':'Your story deserves<br><em>perfect photos</em>',
       'hero.subtitle':'Every moment is unique. I capture it with passion, precision and artistic sensibility — so you can return to it for a lifetime.',
-      'hero.cta':'View portfolio',
+      'hero.cta':'View portfolio','hero.scroll':'Scroll',
       'section.portfolio':'Portfolio','section.services':'Services',
       'section.pricing':'Pricing','section.contact':'Contact',
       'service.wedding.title':'Weddings',
