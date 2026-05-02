@@ -619,17 +619,18 @@
 
     .svc-carousel__window {
       flex: 1;
-      overflow: hidden;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
       border-radius: var(--radius-md);
       min-width: 0;
-      width: 100%;
     }
+    .svc-carousel__window::-webkit-scrollbar { display: none; }
 
     .svc-carousel__track {
       display: flex;
       flex-wrap: nowrap;
-      will-change: transform;
-      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .svc-carousel__arrow {
@@ -674,8 +675,9 @@
 
     .service-card {
       flex-shrink: 0;
-      /* width set by JS to win.offsetWidth — ensures pixel-perfect alignment */
+      scroll-snap-align: start;
       box-sizing: border-box;
+      /* width injected by ResizeObserver in JS */
       background: var(--bg-secondary);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-md);
@@ -2734,7 +2736,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── SERVICES CAROUSEL ────────────────────────────────────────────────────
   (function() {
     const carouselEl = document.getElementById('svcCarousel');
-    const win    = carouselEl?.querySelector('.svc-carousel__window');
+    const win    = carouselEl && carouselEl.querySelector('.svc-carousel__window');
     const track  = document.getElementById('svcTrack');
     const dotsEl = document.getElementById('svcDots');
     const prevBtn= document.getElementById('svcPrev');
@@ -2745,24 +2747,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const N = slides.length;
     let current = 0;
     let busy = false;
-    let resizeTimer;
 
-    /* set every slide width = window pixel width so track = N * win.offsetWidth */
-    function layout(animate) {
-      const w = win.offsetWidth;
-      slides.forEach(s => { s.style.width = w + 'px'; });
-      if (!animate) {
-        track.style.transition = 'none';
-        track.style.transform  = 'translateX(-' + (current * w) + 'px)';
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          track.style.transition = '';
-        }));
-      } else {
-        track.style.transform = 'translateX(-' + (current * w) + 'px)';
-      }
-    }
-
-    /* build dot indicators */
+    /* dots */
     const dots = slides.map((_, i) => {
       const d = document.createElement('button');
       d.className = 'svc-carousel__dot' + (i === 0 ? ' active' : '');
@@ -2772,43 +2758,50 @@ document.addEventListener('DOMContentLoaded', () => {
       return d;
     });
 
+    function syncDots(idx) {
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
     function goTo(idx) {
       if (busy) return;
       idx = ((idx % N) + N) % N;
       if (idx === current) return;
       busy = true;
       current = idx;
-      layout(true);
-      dots.forEach((d, i) => d.classList.toggle('active', i === current));
-      setTimeout(() => { busy = false; }, 580);
+      win.scrollTo({ left: current * win.offsetWidth, behavior: 'smooth' });
+      syncDots(current);
+      setTimeout(() => { busy = false; }, 600);
     }
 
     if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
     if (nextBtn) nextBtn.addEventListener('click', () => goTo(current + 1));
 
-    /* touch / swipe */
-    let tx = 0;
-    win.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-    win.addEventListener('touchend',   e => {
-      const diff = tx - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 44) goTo(current + (diff > 0 ? 1 : -1));
-    });
+    /* update dots when user swipes natively */
+    let scrollTimer;
+    win.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const idx = Math.round(win.scrollLeft / win.offsetWidth);
+        if (idx !== current) { current = idx; syncDots(current); }
+      }, 80);
+    }, { passive: true });
 
     /* keyboard */
-    carouselEl.setAttribute('tabindex', '0');
+    carouselEl.setAttribute('tabindex', '-1');
     carouselEl.addEventListener('keydown', e => {
       if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); }
       if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
     });
 
-    /* resize — recalculate without animation */
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => layout(false), 120);
+    /* ResizeObserver — sets card width = window width whenever layout changes */
+    const ro = new ResizeObserver(() => {
+      const w = win.offsetWidth;
+      if (!w) return;
+      slides.forEach(s => { s.style.width = w + 'px'; });
+      /* reposition instantly without scroll animation */
+      win.scrollTo({ left: current * w, behavior: 'instant' });
     });
-
-    /* initial layout */
-    layout(false);
+    ro.observe(win);
   })();
 
 });
