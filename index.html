@@ -1,0 +1,2604 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fotograf — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────────────
+       CUSTOM PROPERTIES
+    ───────────────────────────────────────────── */
+    :root {
+      --bg-primary:      #0a0a0a;
+      --bg-secondary:    #111111;
+      --bg-card:         #141414;
+      --accent:          #c9a84c;
+      --accent-dim:      rgba(201, 168, 76, 0.30);
+      --accent-glow:     rgba(201, 168, 76, 0.55);
+      --accent-hover:    #dfc06a;
+      --text-primary:    #ffffff;
+      --text-secondary:  #a0a0a0;
+      --text-muted:      #5a5a5a;
+      --border-subtle:   rgba(255, 255, 255, 0.07);
+      --nav-blur-bg:     rgba(10, 10, 10, 0.82);
+      --transition:      0.3s ease;
+      --radius-sm:       4px;
+      --radius-md:       8px;
+      --radius-pill:     999px;
+      --font-heading:    'Cormorant Garamond', Georgia, serif;
+      --font-body:       'Inter', system-ui, sans-serif;
+      --section-pad:     100px 0;
+      --max-w:           1200px;
+    }
+
+    /* ─────────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar               { width: 5px; }
+    ::-webkit-scrollbar-track         { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb         { background: #2a2a2a; border-radius: var(--radius-pill); }
+    ::-webkit-scrollbar-thumb:hover   { background: var(--accent-dim); }
+    * { scrollbar-width: thin; scrollbar-color: #2a2a2a var(--bg-primary); }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILITY
+    ───────────────────────────────────────────── */
+    .container {
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: clamp(20px, 5vw, 60px);
+    }
+
+    /* ─────────────────────────────────────────────
+       ANIMATE-ON-SCROLL BASE STATE
+    ───────────────────────────────────────────── */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    [data-animate="left"] {
+      transform: translateX(-32px);
+    }
+    [data-animate="right"] {
+      transform: translateX(32px);
+    }
+    [data-animate="scale"] {
+      transform: scale(0.94);
+    }
+    [data-animate].is-visible {
+      opacity: 1;
+      transform: translate(0) scale(1);
+    }
+
+    /* Staggered children */
+    [data-stagger] > * {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    [data-stagger].is-visible > *:nth-child(1)  { opacity: 1; transform: none; transition-delay: 0.05s; }
+    [data-stagger].is-visible > *:nth-child(2)  { opacity: 1; transform: none; transition-delay: 0.15s; }
+    [data-stagger].is-visible > *:nth-child(3)  { opacity: 1; transform: none; transition-delay: 0.25s; }
+    [data-stagger].is-visible > *:nth-child(4)  { opacity: 1; transform: none; transition-delay: 0.35s; }
+    [data-stagger].is-visible > *:nth-child(5)  { opacity: 1; transform: none; transition-delay: 0.45s; }
+    [data-stagger].is-visible > *:nth-child(6)  { opacity: 1; transform: none; transition-delay: 0.55s; }
+    [data-stagger].is-visible > *:nth-child(7)  { opacity: 1; transform: none; transition-delay: 0.65s; }
+    [data-stagger].is-visible > *:nth-child(8)  { opacity: 1; transform: none; transition-delay: 0.75s; }
+    [data-stagger].is-visible > *:nth-child(9)  { opacity: 1; transform: none; transition-delay: 0.85s; }
+
+    /* ─────────────────────────────────────────────
+       SECTION TITLES
+    ───────────────────────────────────────────── */
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      display: inline-block;
+      position: relative;
+      margin-bottom: 64px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      height: 2px;
+      width: 48px;
+      background: var(--accent);
+      border-radius: var(--radius-pill);
+      transition: width var(--transition);
+    }
+
+    .section-title:hover::after,
+    .section-title.is-visible::after {
+      width: 100%;
+    }
+
+    .section-title-wrap {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-title-wrap .section-title {
+      margin-bottom: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       BUTTONS
+    ───────────────────────────────────────────── */
+    .btn {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--accent);
+      color: #0a0a0a;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition:
+        background var(--transition),
+        box-shadow var(--transition),
+        transform var(--transition);
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 28px var(--accent-glow), 0 0 60px rgba(201, 168, 76, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: #0a0a0a;
+      box-shadow: 0 0 28px var(--accent-glow);
+    }
+
+    /* ─────────────────────────────────────────────
+       1. NAVIGATION
+    ───────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 20px 0;
+      transition:
+        padding var(--transition),
+        background var(--transition),
+        backdrop-filter var(--transition),
+        border-color var(--transition);
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav.scrolled {
+      padding: 14px 0;
+      background: var(--nav-blur-bg);
+      backdrop-filter: blur(18px) saturate(1.4);
+      -webkit-backdrop-filter: blur(18px) saturate(1.4);
+      border-bottom-color: var(--border-subtle);
+    }
+
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__logo {
+      font-family: var(--font-heading);
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--text-primary);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav__logo span {
+      color: var(--accent);
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 4px;
+      transition: color var(--transition);
+    }
+
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      border-radius: var(--radius-pill);
+      transform: translateX(-50%);
+      transition: width var(--transition);
+    }
+
+    .nav__links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav__links a:hover::after,
+    .nav__links a.active::after {
+      width: 100%;
+    }
+
+    .nav__links a.active {
+      color: var(--text-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       2. HERO
+    ───────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Animated background */
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, #0d0b14 0%, #0a0a0a 40%, #100c08 70%, #0a0d0c 100%);
+      z-index: 0;
+    }
+
+    .hero__bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(201, 168, 76, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(80, 50, 130, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 60% 10%, rgba(30, 60, 80, 0.22) 0%, transparent 50%);
+      animation: heroAmbient 12s ease-in-out infinite alternate;
+    }
+
+    .hero__bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,10,0.30) 0%,
+        rgba(10,10,10,0.15) 40%,
+        rgba(10,10,10,0.70) 100%
+      );
+    }
+
+    @keyframes heroAmbient {
+      0%   { opacity: 1; transform: scale(1)     rotate(0deg); }
+      50%  { opacity: 0.8; transform: scale(1.04) rotate(1deg); }
+      100% { opacity: 1; transform: scale(1.07)  rotate(-0.5deg); }
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      padding: 120px 20px 80px;
+      max-width: 900px;
+    }
+
+    .hero__eyebrow {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.3s forwards;
+    }
+
+    .hero__title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.55s forwards;
+    }
+
+    .hero__title em {
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 300;
+    }
+
+    .hero__subtitle {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-inline: auto;
+      margin-bottom: 48px;
+      line-height: 1.75;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.78s forwards;
+    }
+
+    .hero__cta {
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1s forwards;
+    }
+
+    .hero__scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 1.6s forwards;
+    }
+
+    .hero__scroll-hint span {
+      font-size: 0.6875rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .hero__scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollLine 2s ease-in-out 1.8s infinite;
+    }
+
+    @keyframes scrollLine {
+      0%   { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      50%  { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+      51%  { transform: scaleY(0); transform-origin: top; }
+      100% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ─────────────────────────────────────────────
+       3. PORTFOLIO
+    ───────────────────────────────────────────── */
+    .portfolio {
+      padding: 80px 0 0;
+      background: var(--bg-primary);
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 3px;
+      width: 100%;
+      height: calc(100vh - 60px);
+      min-height: 600px;
+    }
+
+    /* ── Sequential reveal animation ── */
+    .portfolio-seq .portfolio-card {
+      opacity: 0;
+      transform: translateY(100px) scale(0.92);
+    }
+
+    @keyframes photoReveal {
+      0%   { opacity: 0; transform: translateY(100px) scale(0.92); }
+      60%  { opacity: 1; }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .portfolio-seq.is-visible .portfolio-card {
+      animation: photoReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(1) { animation-delay: 0.05s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(2) { animation-delay: 0.20s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(3) { animation-delay: 0.35s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(4) { animation-delay: 0.50s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(5) { animation-delay: 0.65s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(6) { animation-delay: 0.80s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(7) { animation-delay: 0.95s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(8) { animation-delay: 1.10s; }
+    .portfolio-seq.is-visible .portfolio-card:nth-child(9) { animation-delay: 1.25s; }
+
+    .portfolio-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      min-height: 0;
+    }
+
+    .portfolio-card__img {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.6s ease;
+    }
+
+    .portfolio-card:nth-child(1) .portfolio-card__img {
+      background: linear-gradient(135deg, #1a0a2e 0%, #16213e 40%, #0f3460 100%);
+    }
+    .portfolio-card:nth-child(2) .portfolio-card__img {
+      background: linear-gradient(135deg, #2d1b00 0%, #c9a84c 50%, #ff8c00 100%);
+    }
+    .portfolio-card:nth-child(3) .portfolio-card__img {
+      background: linear-gradient(135deg, #003d3d 0%, #00695c 50%, #1de9b6 100%);
+    }
+    .portfolio-card:nth-child(4) .portfolio-card__img {
+      background: linear-gradient(135deg, #1a0000 0%, #7b1fa2 50%, #e91e63 100%);
+    }
+    .portfolio-card:nth-child(5) .portfolio-card__img {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b4332 40%, #40916c 100%);
+    }
+    .portfolio-card:nth-child(6) .portfolio-card__img {
+      background: linear-gradient(135deg, #1c1c1c 0%, #4a4a4a 50%, #c9a84c 100%);
+    }
+    .portfolio-card:nth-child(7) .portfolio-card__img {
+      background: linear-gradient(135deg, #0a1628 0%, #1565c0 50%, #42a5f5 100%);
+    }
+    .portfolio-card:nth-child(8) .portfolio-card__img {
+      background: linear-gradient(135deg, #1a0020 0%, #6a1b9a 40%, #ce93d8 100%);
+    }
+    .portfolio-card:nth-child(9) .portfolio-card__img {
+      background: linear-gradient(135deg, #0f0c00 0%, #5d4037 40%, #ff7043 100%);
+    }
+
+    /* Subtle texture overlay on each card */
+    .portfolio-card__img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.06) 0%, transparent 65%);
+    }
+
+    .portfolio-card__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(10, 10, 10, 0.92) 0%,
+        rgba(10, 10, 10, 0.45) 40%,
+        rgba(10, 10, 10, 0.08) 100%
+      );
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .portfolio-card:hover .portfolio-card__overlay {
+      opacity: 1;
+    }
+
+    .portfolio-card:hover .portfolio-card__img {
+      transform: scale(1.06);
+    }
+
+    .portfolio-card__category {
+      font-family: var(--font-body);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .portfolio-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    /* ─────────────────────────────────────────────
+       4. SERVICES
+    ───────────────────────────────────────────── */
+    .services {
+      padding: var(--section-pad);
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .services::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent-dim), transparent);
+    }
+
+    .services::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent-dim), transparent);
+    }
+
+    /* Category cards */
+    .services-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 80px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--accent-dim);
+      border-radius: var(--radius-md);
+      padding: 32px 24px;
+      text-align: center;
+      transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        transform var(--transition);
+    }
+
+    .service-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 40px rgba(201, 168, 76, 0.12), 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(-4px);
+    }
+
+    .service-card__icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .service-card__title {
+      font-family: var(--font-heading);
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .service-card__desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* Pricing */
+    .pricing-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 44px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .pricing-title-wrap {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .pricing-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: var(--radius-pill);
+      transition: width var(--transition);
+    }
+
+    .pricing-title:hover::after {
+      width: 80%;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--accent-dim);
+      border-radius: var(--radius-md);
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        transform var(--transition);
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      transition: width var(--transition);
+    }
+
+    .pricing-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 50px rgba(201, 168, 76, 0.14), 0 12px 40px rgba(0,0,0,0.5);
+      transform: translateY(-5px);
+    }
+
+    .pricing-card:hover::before {
+      width: 100%;
+      border-radius: 0;
+    }
+
+    .pricing-card__label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .pricing-card__name {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      line-height: 1.25;
+    }
+
+    .pricing-card__price {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .pricing-card__price-amount {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .pricing-card__price-currency {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    .pricing-card__note {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ─────────────────────────────────────────────
+       5. CONTACT
+    ───────────────────────────────────────────── */
+    .contact {
+      padding: var(--section-pad);
+      background: var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact__quote {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-heading);
+      font-size: clamp(5rem, 16vw, 14rem);
+      font-weight: 700;
+      font-style: italic;
+      color: rgba(201, 168, 76, 0.03);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .contact__inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .contact__left {}
+
+    .contact__tagline {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin-top: 24px;
+    }
+
+    .contact__tagline strong {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .contact__items {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      transition:
+        border-color var(--transition),
+        background var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+    }
+
+    .contact-item:hover {
+      border-color: var(--accent-dim);
+      background: #181818;
+      transform: translateX(6px);
+      box-shadow: -4px 0 0 0 var(--accent);
+    }
+
+    .contact-item__icon {
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(201, 168, 76, 0.1);
+      border-radius: var(--radius-md);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      transition: background var(--transition);
+    }
+
+    .contact-item:hover .contact-item__icon {
+      background: rgba(201, 168, 76, 0.2);
+    }
+
+    .contact-item__label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .contact-item__value {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      transition: color var(--transition);
+    }
+
+    .contact-item:hover .contact-item__value {
+      color: var(--accent);
+    }
+
+    /* ─────────────────────────────────────────────
+       6. FOOTER
+    ───────────────────────────────────────────── */
+    .footer {
+      padding: 36px 0;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer__logo {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .footer__logo:hover {
+      color: var(--accent);
+    }
+
+    .footer__copy {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .footer__accent-line {
+      width: 40px;
+      height: 1px;
+      background: var(--accent-dim);
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────────── */
+    /* ─────────────────────────────────────────────
+       PRICING CARD CLICKABLE + MODAL
+    ───────────────────────────────────────────── */
+    .pricing-card--clickable { cursor: pointer; }
+    .pricing-card__hint {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-top: 14px;
+      opacity: 0.7;
+      transition: opacity var(--transition);
+    }
+    .pricing-card--clickable:hover .pricing-card__hint { opacity: 1; }
+
+    .pkg-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 20000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .pkg-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .pkg-modal-box {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-dim);
+      border-radius: 12px;
+      padding: 48px 44px;
+      max-width: 480px;
+      width: calc(100% - 40px);
+      transform: scale(0.86) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease;
+      opacity: 0;
+    }
+    .pkg-modal-overlay.open .pkg-modal-box {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    .pkg-modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: none; border: none;
+      color: var(--text-muted);
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: color var(--transition);
+    }
+    .pkg-modal-close:hover { color: var(--text-primary); }
+    .pkg-modal-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .pkg-modal-name {
+      font-family: var(--font-heading);
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .pkg-modal-price {
+      font-family: var(--font-heading);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 28px;
+    }
+    .pkg-modal-currency {
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+    .pkg-modal-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding: 0;
+    }
+    .pkg-modal-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .pkg-modal-list li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .pkg-modal-btn { width: 100%; text-align: center; display: block; }
+
+    /* ─────────────────────────────────────────────
+       LIGHT THEME
+    ───────────────────────────────────────────── */
+    [data-theme="light"] {
+      --bg-primary:    #f7f3ee;
+      --bg-secondary:  #ede8e1;
+      --bg-card:       #e2d9ce;
+      --accent:        #8b5a2b;
+      --accent-dim:    rgba(139, 90, 43, 0.25);
+      --accent-glow:   rgba(139, 90, 43, 0.45);
+      --accent-hover:  #a06830;
+      --text-primary:  #1a1008;
+      --text-secondary:#5c3d1e;
+      --text-muted:    #9a7d65;
+      --border-subtle: rgba(139, 90, 43, 0.1);
+      --nav-blur-bg:   rgba(247, 243, 238, 0.92);
+    }
+    [data-theme="light"] .hero__bg {
+      background: linear-gradient(135deg, #f0ebe3 0%, #e5ddd2 50%, #f5f0e8 100%);
+    }
+    [data-theme="light"] .hero__bg::before {
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(139,90,43,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(180,130,80,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 60% 10%, rgba(100,70,30,0.08) 0%, transparent 50%);
+    }
+    [data-theme="light"] .btn {
+      background: #d4b896;
+      color: #1a1008;
+    }
+    [data-theme="light"] .btn:hover {
+      background: #c4a67e;
+      box-shadow: 0 0 28px rgba(139,90,43,0.3);
+    }
+    [data-theme="light"] .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    [data-theme="light"] .btn-outline:hover {
+      background: #d4b896;
+      color: #1a1008;
+    }
+    [data-theme="light"] .contact__quote { color: rgba(139,90,43,0.04); }
+
+    /* ─────────────────────────────────────────────
+       NAV CONTROLS (language + theme)
+    ───────────────────────────────────────────── */
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 24px;
+    }
+    .ctrl-btn {
+      position: relative;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color var(--transition), border-color var(--transition), background var(--transition);
+      white-space: nowrap;
+    }
+    .ctrl-btn:hover { color: var(--text-primary); border-color: var(--accent-dim); }
+    .ctrl-btn.active { color: var(--accent); border-color: var(--accent-dim); }
+
+    .lang-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      min-width: 150px;
+      display: none;
+      z-index: 2000;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    }
+    .lang-dropdown.open { display: block; }
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 16px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .lang-option:hover { background: var(--accent-dim); color: var(--text-primary); }
+    .lang-option.active { color: var(--accent); font-weight: 600; }
+    .lang-flag { font-size: 1.1rem; line-height: 1; }
+
+    /* ─────────────────────────────────────────────
+       ABOUT SECTION
+    ───────────────────────────────────────────── */
+    .about {
+      padding: var(--section-pad);
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    .about::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent-dim), transparent);
+    }
+    .about__inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about__photo {
+      position: relative;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: linear-gradient(145deg, #1a0a2e 0%, #2d1500 45%, #0f2a40 100%);
+    }
+    .about__photo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 30%, rgba(201,168,76,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 70% 70%, rgba(80,30,100,0.25) 0%, transparent 55%);
+    }
+    .about__photo-frame {
+      position: absolute;
+      top: -14px; left: -14px;
+      right: 14px; bottom: -14px;
+      border: 1px solid var(--accent-dim);
+      border-radius: var(--radius-md);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .about__photo-tag {
+      position: absolute;
+      bottom: 28px; right: 28px;
+      background: rgba(10,10,10,0.82);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--accent-dim);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      text-align: center;
+    }
+    .about__photo-tag-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .about__photo-tag-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .about__eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+      display: block;
+    }
+    .about__title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+    }
+    .about__title em { font-style: italic; color: var(--accent); }
+    .about__text {
+      font-size: 0.97rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+    .about__cta { margin-top: 36px; }
+
+    /* Word-by-word animation */
+    .word-animate .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .word-animate.words-visible .word {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .about__stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 44px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .stat-item { text-align: center; padding: 0 8px; }
+    .stat-item + .stat-item { border-left: 1px solid var(--border-subtle); }
+    .stat-item__number {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-item__label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ─────────────────────────────────────────────
+       REVIEWS SECTION
+    ───────────────────────────────────────────── */
+    .reviews {
+      padding: var(--section-pad);
+      background: var(--bg-secondary);
+      position: relative;
+    }
+    .reviews::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent-dim), transparent);
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .review-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 30px 28px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .review-card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 44px rgba(0,0,0,0.35);
+    }
+    .review-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .review-stars { color: var(--accent); font-size: 0.85rem; letter-spacing: 2px; }
+    .review-quote {
+      font-family: var(--font-heading);
+      font-size: 3.2rem;
+      color: var(--accent-dim);
+      line-height: 0.7;
+      font-style: italic;
+    }
+    .review-card__text {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.78;
+      font-style: italic;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+    .review-card__author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .review-card__avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-dim), rgba(201,168,76,0.15));
+      border: 1px solid var(--accent-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .review-card__name {
+      font-weight: 500;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .review-card__type {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 1024px) {
+      .portfolio-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .services-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .about__inner { grid-template-columns: 1fr; gap: 48px; }
+      .about__photo { max-width: 420px; margin: 0 auto; }
+      .about__stats { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .stat-item + .stat-item { border-left: none; }
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      :root { --section-pad: 70px 0; }
+
+      .nav__links {
+        gap: 24px;
+      }
+
+      .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+        height: auto;
+        min-height: unset;
+      }
+
+      .services-cards {
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 60px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 380px;
+        margin-inline: auto;
+      }
+
+      .contact__inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .footer__inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer__accent-line { display: none; }
+    }
+
+    @media (max-width: 540px) {
+      .portfolio-grid { grid-template-columns: 1fr; height: auto; }
+      .services-cards { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .about__stats { grid-template-columns: repeat(2, 1fr); }
+      .nav__links { display: none; }
+      .nav-controls { margin-left: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════
+       1. NAVIGATION
+  ═══════════════════════════════════════ -->
+  <header class="nav" id="main-nav" role="banner">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="#hero" class="nav__logo">Foto<span>graf</span></a>
+        <nav role="navigation" aria-label="Główna nawigacja">
+          <ul class="nav__links">
+            <li><a href="#about" data-i18n="nav.about">O mnie</a></li>
+            <li><a href="#portfolio" data-i18n="nav.portfolio">Portfólio</a></li>
+            <li><a href="#services" data-i18n="nav.services">Usługi</a></li>
+            <li><a href="#reviews" data-i18n="nav.reviews">Opinie</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Kontakt</a></li>
+          </ul>
+        </nav>
+        <div class="nav-controls">
+          <!-- Language switcher -->
+          <div style="position:relative">
+            <button class="ctrl-btn" id="lang-toggle" aria-label="Zmień język">🌐 <span id="lang-label">PL</span></button>
+            <div class="lang-dropdown" id="lang-dropdown">
+              <button class="lang-option active" data-lang="pl"><span class="lang-flag">🇵🇱</span> Polski</button>
+              <button class="lang-option" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский</button>
+              <button class="lang-option" data-lang="uk"><span class="lang-flag">🇺🇦</span> Українська</button>
+              <button class="lang-option" data-lang="en"><span class="lang-flag">🇬🇧</span> English</button>
+            </div>
+          </div>
+          <!-- Theme switcher -->
+          <button class="ctrl-btn" id="theme-toggle" title="Zmień motyw">☀️</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════
+         2. HERO
+    ═══════════════════════════════════════ -->
+    <section class="hero" id="hero" aria-label="Sekcja główna">
+      <div class="hero__bg" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <span class="hero__eyebrow" data-i18n="hero.eyebrow">Profesjonalna fotografia</span>
+        <h1 class="hero__title" data-i18n-html="hero.title">
+          Twoja historia zasługuje<br />
+          na <em>idealne&nbsp;zdjęcia</em>
+        </h1>
+        <p class="hero__subtitle" data-i18n="hero.subtitle">
+          Każdy moment jest wyjątkowy. Utrwalam go z pasją, precyzją i artystyczną wrażliwością — tak, abyś mógł wracać do niego przez całe życie.
+        </p>
+        <div class="hero__cta">
+          <a href="#portfolio" class="btn" data-i18n="hero.cta">Zobacz portfolio</a>
+        </div>
+      </div>
+
+      <div class="hero__scroll-hint" aria-hidden="true">
+        <span>Przewiń</span>
+        <div class="hero__scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         3. ABOUT
+    ═══════════════════════════════════════ -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <div class="about__inner">
+
+          <div class="about__visual" data-animate="left">
+            <div class="about__photo">
+              <div class="about__photo-frame"></div>
+              <div class="about__photo-tag">
+                <div class="about__photo-tag-num">2+</div>
+                <div class="about__photo-tag-label" data-i18n="about.tag">Lata pasji</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="about__content">
+            <span class="about__eyebrow" data-animate data-i18n="about.eyebrow">Fotograf & Artystka</span>
+            <h2 class="about__title" id="about-title" data-animate data-i18n-html="about.title">
+              Witaj, jestem<br><em>Katarzyna</em>
+            </h2>
+
+            <p class="about__text word-animate" data-animate data-i18n="about.p1">
+              Jestem fotografem z pasją do chwil, których nie można odwrócić. Od ponad 2 lat towarzyszę ludziom w wyjątkowych momentach ich życia — urodziny, sesje studyjne, portrety i plenery miejskie.
+            </p>
+            <p class="about__text word-animate" data-animate data-i18n="about.p2">
+              Wierzę, że każde zdjęcie to nie tylko obraz — to emocja zamknięta w kadrze na zawsze. Nie reżyseruję — obserwuję, czekam i wychwytam moment, który mówi więcej niż tysiąc słów.
+            </p>
+            <p class="about__text word-animate" data-animate data-i18n="about.p3">
+              Zaufało mi już ponad 200 zadowolonych klientów. Pozwól, że Twoja historia stanie się kolejnym pięknym rozdziałem w moim obiektywie.
+            </p>
+            <div class="about__cta" data-animate>
+              <a href="#contact" class="btn" data-i18n="about.cta">Porozmawiajmy</a>
+            </div>
+
+            <div class="about__stats" data-stagger data-animate>
+              <div class="stat-item">
+                <div class="stat-item__number">2+</div>
+                <div class="stat-item__label" data-i18n="stat.years">Lata doświadczenia</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item__number">200+</div>
+                <div class="stat-item__label" data-i18n="stat.clients">Klientów</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item__number">20k+</div>
+                <div class="stat-item__label" data-i18n="stat.photos">Zdjęć</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item__number">100+</div>
+                <div class="stat-item__label" data-i18n="stat.sessions">Sesji</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         4. PORTFOLIO
+    ═══════════════════════════════════════ -->
+    <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title">
+      <div class="container">
+        <div class="section-title-wrap">
+          <h2 class="section-title animate-on-scroll" id="portfolio-title" data-animate data-i18n="section.portfolio">Portfólio</h2>
+        </div>
+      </div>
+
+      <div class="portfolio-grid portfolio-seq">
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Fotografia ślubna — para młoda"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Wesela</p>
+              <h3 class="portfolio-card__title">Miłość w każdym kadrze</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Sesja złota — portret studyjny"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Studio</p>
+              <h3 class="portfolio-card__title">Złota godzina</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Plener — natura i zieleń"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Plener</p>
+              <h3 class="portfolio-card__title">Natura w obiektywie</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Portret — kolorowe tło fiolet"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Portret</p>
+              <h3 class="portfolio-card__title">Siła charakteru</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Sesja rodzinna — las"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Rodzina</p>
+              <h3 class="portfolio-card__title">Chwile razem</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Czarno-biała sesja studyjna"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Studio</p>
+              <h3 class="portfolio-card__title">Elegancja i cień</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Fotografia miejska — błękity"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Miejski</p>
+              <h3 class="portfolio-card__title">Miasto nocą</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Sesja artystyczna — fiolet"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Artystyczny</p>
+              <h3 class="portfolio-card__title">Sen i marzenia</h3>
+            </div>
+          </article>
+
+          <article class="portfolio-card">
+            <div class="portfolio-card__img" role="img" aria-label="Sesja produktowa — ciepłe tony"></div>
+            <div class="portfolio-card__overlay">
+              <p class="portfolio-card__category">Produkty</p>
+              <h3 class="portfolio-card__title">Detale mają znaczenie</h3>
+            </div>
+          </article>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         4. SERVICES
+    ═══════════════════════════════════════ -->
+    <section class="services" id="services" aria-labelledby="services-title">
+      <div class="container">
+        <div class="section-title-wrap">
+          <h2 class="section-title animate-on-scroll" id="services-title" data-animate data-i18n="section.services">Usługi</h2>
+        </div>
+
+        <!-- Category cards -->
+        <div class="services-cards animate-on-scroll" data-stagger>
+
+          <article class="service-card">
+            <span class="service-card__icon" aria-hidden="true">💍</span>
+            <h3 class="service-card__title" data-i18n="service.wedding.title">Wesela</h3>
+            <p class="service-card__desc" data-i18n="service.wedding.desc">
+              Od przygotowań po ostatni taniec — dokumentuję każdą emocję Waszego wyjątkowego dnia z niepowtarzalną czułością i precyzją.
+            </p>
+            <a href="#contact" class="btn btn-outline" data-i18n="service.btn">Zapytaj o wycenę</a>
+          </article>
+
+          <article class="service-card">
+            <span class="service-card__icon" aria-hidden="true">🎂</span>
+            <h3 class="service-card__title" data-i18n="service.birthday.title">Urodziny</h3>
+            <p class="service-card__desc" data-i18n="service.birthday.desc">
+              Twoje urodziny to wyjątkowa okazja. Utrwalę radość, śmiech i ciepło chwil, które będziesz wspominać przez lata.
+            </p>
+            <a href="#contact" class="btn btn-outline" data-i18n="service.btn">Zapytaj o wycenę</a>
+          </article>
+
+          <article class="service-card">
+            <span class="service-card__icon" aria-hidden="true">📸</span>
+            <h3 class="service-card__title" data-i18n="service.studio.title">Studio</h3>
+            <p class="service-card__desc" data-i18n="service.studio.desc">
+              Profesjonalne warunki, kreatywne oświetlenie i indywidualne podejście. Sesja studyjna, która wydobędzie z Ciebie to, co najlepsze.
+            </p>
+            <a href="#contact" class="btn btn-outline" data-i18n="service.btn">Zapytaj o wycenę</a>
+          </article>
+
+          <article class="service-card">
+            <span class="service-card__icon" aria-hidden="true">🏙️</span>
+            <h3 class="service-card__title" data-i18n="service.street.title">Plener miejski</h3>
+            <p class="service-card__desc" data-i18n="service.street.desc">
+              Żywa atmosfera miasta, naturalne światło i prawdziwe emocje. Sesja uliczna — Twoja historia na tle miejskiego rytmu.
+            </p>
+            <a href="#contact" class="btn btn-outline" data-i18n="service.btn">Zapytaj o wycenę</a>
+          </article>
+
+        </div>
+
+        <!-- Pricing table -->
+        <div class="pricing-title-wrap">
+          <h3 class="pricing-title animate-on-scroll" data-animate data-i18n="section.pricing">Cennik sesji</h3>
+        </div>
+
+        <div class="pricing-grid animate-on-scroll" data-stagger>
+
+          <div class="pricing-card pricing-card--clickable" data-pkg="basic" role="button" tabindex="0">
+            <p class="pricing-card__label" data-i18n="pricing.basic.label">Pakiet podstawowy</p>
+            <h4 class="pricing-card__name" data-i18n="pricing.basic.name">1 godzina</h4>
+            <div class="pricing-card__price">
+              <span class="pricing-card__price-amount" data-final="350">350</span>
+              <span class="pricing-card__price-currency">zł</span>
+            </div>
+            <p class="pricing-card__note" data-i18n="pricing.basic.note">Idealne na sesję portretową</p>
+            <p class="pricing-card__hint" data-i18n="pricing.hint">Kliknij po szczegóły ↗</p>
+          </div>
+
+          <div class="pricing-card pricing-card--clickable" data-pkg="standard" role="button" tabindex="0">
+            <p class="pricing-card__label" data-i18n="pricing.standard.label">Pakiet standard</p>
+            <h4 class="pricing-card__name" data-i18n="pricing.standard.name">2 godziny</h4>
+            <div class="pricing-card__price">
+              <span class="pricing-card__price-amount" data-final="500">500</span>
+              <span class="pricing-card__price-currency">zł</span>
+            </div>
+            <p class="pricing-card__note" data-i18n="pricing.standard.note">Sesja rodzinna lub produktowa</p>
+            <p class="pricing-card__hint" data-i18n="pricing.hint">Kliknij po szczegóły ↗</p>
+          </div>
+
+          <div class="pricing-card pricing-card--clickable" data-pkg="extra" role="button" tabindex="0">
+            <p class="pricing-card__label" data-i18n="pricing.extra.label">Każda kolejna</p>
+            <h4 class="pricing-card__name" data-i18n="pricing.extra.name">+1 godzina</h4>
+            <div class="pricing-card__price">
+              <span class="pricing-card__price-amount" data-final="+120">+120</span>
+              <span class="pricing-card__price-currency">zł</span>
+            </div>
+            <p class="pricing-card__note" data-i18n="pricing.extra.note">Elastyczne rozszerzenie sesji</p>
+            <p class="pricing-card__hint" data-i18n="pricing.hint">Kliknij po szczegóły ↗</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         6. REVIEWS
+    ═══════════════════════════════════════ -->
+    <section class="reviews" id="reviews" aria-labelledby="reviews-title">
+      <div class="container">
+        <div class="section-title-wrap">
+          <h2 class="section-title animate-on-scroll" id="reviews-title" data-animate data-i18n="section.reviews">Opinie</h2>
+        </div>
+        <div class="reviews-grid animate-on-scroll" data-stagger>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Aleksander uchwycił każdą emocję naszego ślubu z niesamowitą precyzją. Zdjęcia przekroczyły nasze oczekiwania — to wspomnienia na całe życie. Polecam każdemu bez zastanowienia!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">KW</div>
+              <div>
+                <div class="review-card__name">Karolina Wiśniewska</div>
+                <div class="review-card__type">Wesele</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Profesjonalne podejście, świetna atmosfera i efekt końcowy, który zachwycił mnie i całą rodzinę. Naprawdę wie jak wydobyć z człowieka to, co najlepsze. Rewelacja!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">MK</div>
+              <div>
+                <div class="review-card__name">Marek Kowalski</div>
+                <div class="review-card__type">Sesja studyjna</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Zdjęcia z urodzin mojego syna są absolutnie piękne. Każde ujęcie pełne naturalnych emocji i radości. Aleksander ma wyjątkowy talent do pracy z dziećmi. Serdecznie polecam!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">AN</div>
+              <div>
+                <div class="review-card__name">Anna Nowak</div>
+                <div class="review-card__type">Urodziny</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Od pierwszego kontaktu czułem profesjonalizm i pasję. Nasze zdjęcia ślubne to prawdziwe dzieła sztuki. Każde zdjęcie opowiada inną część naszej historii. Dziękujemy!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">PZ</div>
+              <div>
+                <div class="review-card__name">Piotr Zieliński</div>
+                <div class="review-card__type">Wesele</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Sesja plenerowa w centrum miasta przeszła moje oczekiwania. Aleksander ma niesamowity talent do znajdowania pięknych kadrów w codziennych miejscach. Polecam z całego serca!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">MW</div>
+              <div>
+                <div class="review-card__name">Marta Wójcik</div>
+                <div class="review-card__type">Plener miejski</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Czarne tło, dramatyczne oświetlenie, zdjęcia jak z okładki magazynu. Klimat sesji studyjnej był absolutnie wyjątkowy. Wróciłem już trzy razy i wrócę znowu!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">TL</div>
+              <div>
+                <div class="review-card__name">Tomasz Lewandowski</div>
+                <div class="review-card__type">Studio</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Nigdy wcześniej nie czułam się tak swobodnie przed obiektywem. Aleksander potrafi sprawić, że zapominasz o aparacie i po prostu jesteś sobą. Efekt — zachwycający.</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">ZK</div>
+              <div>
+                <div class="review-card__name">Zofia Kamińska</div>
+                <div class="review-card__type">Portret</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Nasze wesele uwiecznione do perfekcji. Nie wyobrażam sobie, że mógłby to zrobić ktoś inny. Każde zdjęcie to inna, piękna chwila naszego wspólnego dnia. Dziękujemy!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">RS</div>
+              <div>
+                <div class="review-card__name">Rafał Szymański</div>
+                <div class="review-card__type">Wesele</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card__top">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-quote">"</div>
+            </div>
+            <p class="review-card__text">Sesja rodzinna z trójką małych dzieci to wyzwanie — ale Aleksander poradził sobie znakomicie. Naturalne, radosne, pełne życia zdjęcia. Dokładnie to, o czym marzyłam!</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">AD</div>
+              <div>
+                <div class="review-card__name">Agnieszka Dąbrowska</div>
+                <div class="review-card__type">Sesja rodzinna</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         7. CONTACT
+    ═══════════════════════════════════════ -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="contact__quote" aria-hidden="true">Kontakt</div>
+
+      <div class="container">
+        <div class="contact__inner">
+
+          <div class="contact__left" data-animate>
+            <h2 class="section-title animate-on-scroll" id="contact-title" data-i18n="section.contact">Kontakt</h2>
+            <p class="contact__tagline" data-i18n-html="contact.tagline">
+              Każde wielkie zdjęcie zaczyna się od <strong>rozmowy</strong>. Napisz do mnie — chętnie poznam Twoją historię.
+            </p>
+          </div>
+
+          <div class="contact__items animate-on-scroll" data-stagger data-animate="right">
+
+            <a href="mailto:foto@example.com" class="contact-item">
+              <div class="contact-item__icon" aria-hidden="true">✉️</div>
+              <div>
+                <p class="contact-item__label">E-mail</p>
+                <p class="contact-item__value">foto@example.com</p>
+              </div>
+            </a>
+
+            <a href="https://t.me/photographer" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <div class="contact-item__icon" aria-hidden="true">✈️</div>
+              <div>
+                <p class="contact-item__label">Telegram</p>
+                <p class="contact-item__value">@photographer</p>
+              </div>
+            </a>
+
+            <a href="https://instagram.com/photographer.pl" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <div class="contact-item__icon" aria-hidden="true">📷</div>
+              <div>
+                <p class="contact-item__label">Instagram</p>
+                <p class="contact-item__value">@photographer.pl</p>
+              </div>
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       6. FOOTER
+  ═══════════════════════════════════════ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <a href="#hero" class="footer__logo">Fotograf</a>
+        <div class="footer__accent-line" aria-hidden="true"></div>
+        <p class="footer__copy" data-i18n="footer.copy">© 2026 Fotograf. Wszystkie prawa zastrzeżone.</p>
+        <div class="footer__accent-line" aria-hidden="true"></div>
+        <a href="#hero" class="footer__logo" aria-label="Wróć na górę">↑</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- PRICING MODAL -->
+  <div id="pkg-modal" class="pkg-modal-overlay" role="dialog" aria-modal="true" aria-label="Szczegóły pakietu">
+    <div class="pkg-modal-box">
+      <button class="pkg-modal-close" aria-label="Zamknij">×</button>
+      <div class="pkg-modal-header">
+        <p class="pkg-modal-label" id="modal-label"></p>
+        <h3 class="pkg-modal-name" id="modal-name"></h3>
+        <div class="pkg-modal-price"><span id="modal-price"></span> <span class="pkg-modal-currency">zł</span></div>
+      </div>
+      <ul class="pkg-modal-list" id="modal-list"></ul>
+      <a href="#contact" class="btn pkg-modal-btn" id="modal-cta">Zapytaj o termin</a>
+    </div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── 1. PAGE FADE IN ──────────────────────────────────────────────────────
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity 0.7s ease';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.body.style.opacity = '1';
+  }));
+
+  // ── 2. TEXT SCRAMBLE (hero headline) ─────────────────────────────────────
+  const heroHeadline = document.querySelector('.hero h1');
+  if (heroHeadline) {
+    const finalText = heroHeadline.innerText;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const duration = 1600;
+    const start = performance.now();
+    const savedHTML = heroHeadline.innerHTML;
+
+    function scramble(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const resolved = Math.floor(p * finalText.length);
+      let out = '';
+      for (let i = 0; i < finalText.length; i++) {
+        if (i < resolved || finalText[i] === ' ' || finalText[i] === '\n') {
+          out += finalText[i];
+        } else {
+          out += chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+      heroHeadline.innerText = out;
+      if (p < 1) requestAnimationFrame(scramble);
+      else heroHeadline.innerHTML = savedHTML;
+    }
+    setTimeout(() => requestAnimationFrame(scramble), 400);
+  }
+
+  // ── 3. SMOOTH SCROLL + ACTIVE NAV ────────────────────────────────────────
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.getElementById(link.getAttribute('href').slice(1));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      closeMobileMenu();
+    });
+  });
+
+  const sections = document.querySelectorAll('section[id]');
+  function updateActiveLink() {
+    const pos = window.scrollY + window.innerHeight / 3;
+    sections.forEach(sec => {
+      const link = document.querySelector(`nav a[href="#${sec.id}"]`);
+      if (!link) return;
+      const active = pos >= sec.offsetTop && pos < sec.offsetTop + sec.offsetHeight;
+      link.classList.toggle('active', active);
+    });
+  }
+
+  // ── 4. STICKY NAV ────────────────────────────────────────────────────────
+  const mainNav = document.getElementById('main-nav');
+  function updateNav() {
+    if (mainNav) mainNav.classList.toggle('scrolled', window.scrollY > 80);
+  }
+
+  // ── 5. HERO PARALLAX ─────────────────────────────────────────────────────
+  const heroBg      = document.querySelector('.hero__bg');
+  const heroContent = document.querySelector('.hero__content');
+  function updateParallax() {
+    const y = window.scrollY;
+    if (heroBg)      heroBg.style.transform      = `translateY(${y * 0.35}px)`;
+    if (heroContent) heroContent.style.transform = `translateY(${y * 0.15}px)`;
+  }
+
+  // ── shared RAF scroll loop ────────────────────────────────────────────────
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateNav();
+        updateActiveLink();
+        updateParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  updateNav(); updateActiveLink();
+
+  // ── 6. SCROLL-REVEAL (IntersectionObserver) ───────────────────────────────
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('[data-animate], .animate-on-scroll, .portfolio-seq').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ── 7. PORTFOLIO LIGHTBOX ─────────────────────────────────────────────────
+  const cards = Array.from(document.querySelectorAll('.portfolio-card'));
+
+  const lb = document.createElement('div');
+  lb.style.cssText = [
+    'position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:10000',
+    'display:none;align-items:center;justify-content:center',
+    'opacity:0;transition:opacity 0.3s ease'
+  ].join(';');
+
+  const lbBox = document.createElement('div');
+  lbBox.style.cssText = [
+    'position:relative;width:min(700px,90vw);min-height:380px',
+    'border-radius:10px;overflow:hidden',
+    'transform:scale(0.85);opacity:0',
+    'transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.35s ease'
+  ].join(';');
+
+  const lbFace = document.createElement('div');
+  lbFace.style.cssText = 'width:100%;min-height:380px;';
+
+  const lbClose = document.createElement('button');
+  lbClose.textContent = '×';
+  lbClose.style.cssText = [
+    'position:absolute;top:12px;right:16px;background:none;border:none',
+    'color:#fff;font-size:2.2rem;cursor:pointer;line-height:1;padding:0 4px',
+    'opacity:0.75;transition:opacity 0.2s'
+  ].join(';');
+  lbClose.onmouseenter = () => lbClose.style.opacity = '1';
+  lbClose.onmouseleave = () => lbClose.style.opacity = '0.75';
+
+  const lbCount = document.createElement('div');
+  lbCount.style.cssText = 'position:absolute;bottom:12px;right:16px;color:rgba(255,255,255,0.5);font-size:0.85rem;letter-spacing:1px';
+
+  lbBox.append(lbFace, lbClose, lbCount);
+  lb.appendChild(lbBox);
+  document.body.appendChild(lb);
+
+  function openLb(idx) {
+    const card = cards[idx];
+    const img  = card.querySelector('.portfolio-card__img');
+    const cs   = getComputedStyle(img);
+    lbFace.style.background = cs.background;
+    lbFace.innerHTML = card.innerHTML;
+    lbCount.textContent = `${idx + 1} / ${cards.length}`;
+    lb.style.display = 'flex';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      lb.style.opacity = '1';
+      lbBox.style.transform = 'scale(1)';
+      lbBox.style.opacity = '1';
+    }));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLb() {
+    lb.style.opacity = '0';
+    lbBox.style.transform = 'scale(0.85)';
+    lbBox.style.opacity = '0';
+    setTimeout(() => { lb.style.display = 'none'; document.body.style.overflow = ''; }, 350);
+  }
+
+  cards.forEach((c, i) => { c.style.cursor = 'pointer'; c.addEventListener('click', () => openLb(i)); });
+  lbClose.addEventListener('click', closeLb);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+  // ── 8. PRICING COUNTER ANIMATION ─────────────────────────────────────────
+  const priceEls  = document.querySelectorAll('.pricing-card__price-amount');
+  const targets   = [300, 500, 120];
+  const easeOut   = t => 1 - Math.pow(1 - t, 4);
+  let counted     = false;
+
+  function runCounters() {
+    priceEls.forEach((el, i) => {
+      const raw = el.textContent.replace(/\D/g, '');
+      const tgt = parseInt(raw) || targets[i] || 0;
+      const prefix = el.textContent.startsWith('+') ? '+' : '';
+      const t0 = performance.now();
+      const dur = 1500;
+      function tick(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        el.textContent = prefix + Math.round(easeOut(p) * tgt);
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = el.getAttribute('data-final') || el.textContent;
+      }
+      el.setAttribute('data-final', el.textContent);
+      requestAnimationFrame(tick);
+    });
+  }
+
+  const pricingObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !counted) { counted = true; runCounters(); pricingObserver.disconnect(); }
+    });
+  }, { threshold: 0.3 });
+
+  const pricingGrid = document.querySelector('.pricing-grid');
+  if (pricingGrid) pricingObserver.observe(pricingGrid);
+
+  // ── 9. CUSTOM CURSOR (desktop only) ──────────────────────────────────────
+  const isTouch = window.matchMedia('(pointer: coarse)').matches
+    || /Mobi|Android/i.test(navigator.userAgent);
+
+  if (!isTouch) {
+    const cur = document.createElement('div');
+    cur.style.cssText = [
+      'position:fixed;top:0;left:0;width:18px;height:18px',
+      'background:rgba(201,168,76,0.8);border-radius:50%',
+      'pointer-events:none;z-index:99999',
+      'transition:width .2s ease,height .2s ease,background .2s ease',
+      'mix-blend-mode:difference;will-change:transform'
+    ].join(';');
+    document.body.appendChild(cur);
+    document.body.style.cursor = 'none';
+
+    let mx = 0, my = 0, cx = 0, cy = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    function animCursor() {
+      cx += (mx - cx) * 0.12; cy += (my - cy) * 0.12;
+      cur.style.transform = `translate(${cx - 9}px,${cy - 9}px)`;
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+
+    document.querySelectorAll('a,button,[role="button"],.portfolio-card').forEach(el => {
+      el.style.cursor = 'none';
+      el.addEventListener('mouseenter', () => { cur.style.width = '38px'; cur.style.height = '38px'; cur.style.background = 'rgba(201,168,76,0.5)'; });
+      el.addEventListener('mouseleave', () => { cur.style.width = '18px'; cur.style.height = '18px'; cur.style.background = 'rgba(201,168,76,0.8)'; });
+    });
+    document.addEventListener('mouseleave', () => { cur.style.opacity = '0'; });
+    document.addEventListener('mouseenter', () => { cur.style.opacity = '1'; });
+  }
+
+  // ── 10. MOBILE HAMBURGER ──────────────────────────────────────────────────
+  const navInner = document.querySelector('.nav__inner');
+  const navUl    = document.querySelector('.nav__links');
+
+  if (navInner && navUl) {
+    const ham = document.createElement('button');
+    ham.setAttribute('aria-label', 'Menu');
+    ham.style.cssText = 'display:none;flex-direction:column;background:none;border:none;cursor:pointer;padding:8px;color:#fff;gap:5px;z-index:1001';
+    ham.innerHTML = '<span style="display:block;width:22px;height:2px;background:currentColor;transition:transform .3s,opacity .3s"></span>'.repeat(3);
+    navInner.appendChild(ham);
+
+    const mobileOverlay = document.createElement('div');
+    mobileOverlay.style.cssText = [
+      'position:fixed;inset:0;background:rgba(10,10,10,0.96);backdrop-filter:blur(12px)',
+      'z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:32px',
+      'transform:translateY(-100%);transition:transform .4s cubic-bezier(.4,0,.2,1)'
+    ].join(';');
+
+    ['Portfólio|#portfolio','Usługi|#services','Kontakt|#contact'].forEach(item => {
+      const [label, href] = item.split('|');
+      const a = document.createElement('a');
+      a.href = href; a.textContent = label;
+      a.style.cssText = 'color:#fff;text-decoration:none;font-size:1.8rem;letter-spacing:3px;text-transform:uppercase;font-family:var(--font-heading)';
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const t = document.querySelector(href);
+        if (t) { closeMobileMenu(); setTimeout(() => t.scrollIntoView({behavior:'smooth'}), 350); }
+      });
+      mobileOverlay.appendChild(a);
+    });
+    document.body.appendChild(mobileOverlay);
+
+    let menuOpen = false;
+    function openMobileMenu() {
+      menuOpen = true;
+      mobileOverlay.style.display = 'flex';
+      requestAnimationFrame(() => requestAnimationFrame(() => { mobileOverlay.style.transform = 'translateY(0)'; }));
+      const sp = ham.querySelectorAll('span');
+      sp[0].style.transform = 'translateY(7px) rotate(45deg)';
+      sp[1].style.opacity = '0';
+      sp[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+    }
+    function closeMobileMenu() {
+      menuOpen = false;
+      mobileOverlay.style.transform = 'translateY(-100%)';
+      const sp = ham.querySelectorAll('span');
+      sp[0].style.transform = 'none'; sp[1].style.opacity = '1'; sp[2].style.transform = 'none';
+      setTimeout(() => { if (!menuOpen) mobileOverlay.style.display = 'none'; }, 400);
+    }
+    ham.addEventListener('click', () => menuOpen ? closeMobileMenu() : openMobileMenu());
+
+    function checkWidth() {
+      const mobile = window.innerWidth < 640;
+      ham.style.display = mobile ? 'flex' : 'none';
+      navUl.style.display = mobile ? 'none' : '';
+      if (!mobile) closeMobileMenu();
+    }
+    checkWidth();
+    window.addEventListener('resize', checkWidth);
+  }
+
+
+  // ── PRICING MODAL ────────────────────────────────────────────────────────
+  const pkgData = {
+    basic: {
+      label: { pl:'Pakiet podstawowy', ru:'Базовый пакет', uk:'Базовий пакет', en:'Basic package' },
+      name:  { pl:'1 godzina',         ru:'1 час',          uk:'1 година',       en:'1 hour' },
+      price: '350',
+      items: {
+        pl: ['35–50 gotowych, obrobionych zdjęć','Pełny retusz i korekcja kolorów','Prywatna galeria online do pobrania','Dostawa w ciągu 7 dni roboczych','1 lokalizacja sesji'],
+        ru: ['35–50 готовых обработанных фото','Полная ретушь и цветокоррекция','Личная онлайн-галерея для скачивания','Доставка в течение 7 рабочих дней','1 локация съёмки'],
+        uk: ['35–50 готових оброблених фото','Повна ретуш і корекція кольорів','Особиста онлайн-галерея для завантаження','Доставка протягом 7 робочих днів','1 локація зйомки'],
+        en: ['35–50 finished, edited photos','Full retouching and color correction','Private online gallery for download','Delivery within 7 business days','1 shooting location'],
+      }
+    },
+    standard: {
+      label: { pl:'Pakiet standard', ru:'Стандартный пакет', uk:'Стандартний пакет', en:'Standard package' },
+      name:  { pl:'2 godziny',       ru:'2 часа',             uk:'2 години',          en:'2 hours' },
+      price: '500',
+      items: {
+        pl: ['75–100 gotowych, obrobionych zdjęć','Pełny retusz i korekcja kolorów','Prywatna galeria online do pobrania','Dostawa w ciągu 10 dni roboczych','Do 2 lokalizacji sesji','Konsultacja przed sesją'],
+        ru: ['75–100 готовых обработанных фото','Полная ретушь и цветокоррекция','Личная онлайн-галерея для скачивания','Доставка в течение 10 рабочих дней','До 2 локаций съёмки','Консультация перед съёмкой'],
+        uk: ['75–100 готових оброблених фото','Повна ретуш і корекція кольорів','Особиста онлайн-галерея для завантаження','Доставка протягом 10 робочих днів','До 2 локацій зйомки','Консультація перед зйомкою'],
+        en: ['75–100 finished, edited photos','Full retouching and color correction','Private online gallery for download','Delivery within 10 business days','Up to 2 shooting locations','Pre-shoot consultation'],
+      }
+    },
+    extra: {
+      label: { pl:'Każda kolejna', ru:'Каждый следующий', uk:'Кожна наступна', en:'Each additional' },
+      name:  { pl:'+1 godzina',   ru:'+1 час',            uk:'+1 година',      en:'+1 hour' },
+      price: '+120',
+      items: {
+        pl: ['Przedłużenie dowolnego pakietu','Dodatkowe zdjęcia wg wybranego pakietu','Te same warunki co wybrany pakiet','Brak ukrytych opłat','Elastyczny harmonogram'],
+        ru: ['Продление любого пакета','Дополнительные фото по условиям пакета','Те же условия что и выбранный пакет','Без скрытых платежей','Гибкий график'],
+        uk: ['Продовження будь-якого пакету','Додаткові фото за умовами пакету','Ті ж умови, що й обраний пакет','Без прихованих платежів','Гнучкий графік'],
+        en: ['Extension of any package','Additional photos per package terms','Same conditions as chosen package','No hidden fees','Flexible schedule'],
+      }
+    }
+  };
+
+  const pkgModal    = document.getElementById('pkg-modal');
+  const pkgModalBox = pkgModal ? pkgModal.querySelector('.pkg-modal-box') : null;
+
+  function openPkgModal(pkgKey) {
+    const pkg = pkgData[pkgKey];
+    if (!pkg || !pkgModal) return;
+    const lang = currentLang || 'pl';
+    document.getElementById('modal-label').textContent = pkg.label[lang] || pkg.label.pl;
+    document.getElementById('modal-name').textContent  = pkg.name[lang]  || pkg.name.pl;
+    document.getElementById('modal-price').textContent = pkg.price;
+    const list = document.getElementById('modal-list');
+    list.innerHTML = (pkg.items[lang] || pkg.items.pl).map(t => `<li>${t}</li>`).join('');
+    const ctaTexts = { pl:'Zapytaj o termin', ru:'Записаться', uk:'Записатись', en:'Book a session' };
+    document.getElementById('modal-cta').textContent = ctaTexts[lang] || ctaTexts.pl;
+    pkgModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePkgModal() {
+    if (!pkgModal) return;
+    pkgModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (pkgModal) {
+    document.querySelectorAll('.pricing-card--clickable').forEach(card => {
+      card.addEventListener('click', () => openPkgModal(card.dataset.pkg));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openPkgModal(card.dataset.pkg); });
+    });
+    pkgModal.querySelector('.pkg-modal-close').addEventListener('click', closePkgModal);
+    pkgModal.addEventListener('click', e => { if (e.target === pkgModal) closePkgModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePkgModal(); });
+    pkgModal.querySelector('#modal-cta').addEventListener('click', () => {
+      closePkgModal();
+      setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 300);
+    });
+  }
+
+  // ── WORD-BY-WORD ANIMATION ───────────────────────────────────────────────
+  function initWordAnimation() {
+    document.querySelectorAll('.word-animate').forEach(el => {
+      const text = el.textContent.trim();
+      const words = text.split(/\s+/);
+      el.innerHTML = words.map((w, i) =>
+        `<span class="word" style="transition-delay:${(i * 0.055).toFixed(2)}s">${w}</span>`
+      ).join(' ');
+    });
+
+    const wordObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('words-visible');
+          wordObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll('.word-animate').forEach(el => wordObserver.observe(el));
+  }
+  initWordAnimation();
+
+  // ── SMOOTH SCROLL FOR ALL INTERNAL LINKS ─────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ── TRANSLATIONS ──────────────────────────────────────────────────────────
+  const i18n = {
+    pl: {
+      'nav.about':'O mnie','nav.portfolio':'Portfólio','nav.services':'Usługi','nav.reviews':'Opinie','nav.contact':'Kontakt',
+      'about.eyebrow':'Fotograf & Artystka','about.title':'Witaj, jestem<br><em>Katarzyna</em>',
+      'about.p1':'Jestem fotografem z pasją do chwil, których nie można odwrócić. Od ponad 2 lat towarzyszę ludziom w wyjątkowych momentach ich życia — urodziny, sesje studyjne, portrety i plenery miejskie.',
+      'about.p2':'Wierzę, że każde zdjęcie to nie tylko obraz — to emocja zamknięta w kadrze na zawsze. Nie reżyseruję — obserwuję, czekam i wychwytam moment, który mówi więcej niż tysiąc słów.',
+      'about.p3':'Zaufało mi już ponad 200 zadowolonych klientów. Pozwól, że Twoja historia stanie się kolejnym pięknym rozdziałem w moim obiektywie.',
+      'about.cta':'Porozmawiajmy','about.tag':'Lata pasji',
+      'stat.years':'Lata doświadczenia','stat.clients':'Klientów','stat.photos':'Zdjęć','stat.sessions':'Sesji',
+      'pricing.hint':'Kliknij po szczegóły ↗',
+      'hero.eyebrow':'Profesjonalna fotografia',
+      'hero.title':'Twoja historia zasługuje<br>na <em>idealne&nbsp;zdjęcia</em>',
+      'hero.subtitle':'Każdy moment jest wyjątkowy. Utrwalam go z pasją, precyzją i artystyczną wrażliwością — tak, abyś mógł wracać do niego przez całe życie.',
+      'hero.cta':'Zobacz portfolio',
+      'section.portfolio':'Portfólio','section.services':'Usługi',
+      'section.pricing':'Cennik sesji','section.reviews':'Opinie','section.contact':'Kontakt',
+
+      'service.wedding.title':'Wesela',
+      'service.wedding.desc':'Od przygotowań po ostatni taniec — dokumentuję każdą emocję Waszego wyjątkowego dnia z niepowtarzalną czułością i precyzją.',
+      'service.birthday.title':'Urodziny',
+      'service.birthday.desc':'Twoje urodziny to wyjątkowa okazja. Utrwalę radość, śmiech i ciepło chwil, które będziesz wspominać przez lata.',
+      'service.studio.title':'Studio',
+      'service.studio.desc':'Profesjonalne warunki, kreatywne oświetlenie i indywidualne podejście. Sesja studyjna, która wydobędzie z Ciebie to, co najlepsze.',
+      'service.street.title':'Plener miejski',
+      'service.street.desc':'Żywa atmosfera miasta, naturalne światło i prawdziwe emocje. Sesja uliczna — Twoja historia na tle miejskiego rytmu.',
+      'service.btn':'Zapytaj o wycenę',
+      'pricing.basic.label':'Pakiet podstawowy','pricing.basic.name':'1 godzina','pricing.basic.note':'Idealne na sesję portretową',
+      'pricing.standard.label':'Pakiet standard','pricing.standard.name':'2 godziny','pricing.standard.note':'Sesja rodzinna lub produktowa',
+      'pricing.extra.label':'Każda kolejna','pricing.extra.name':'+1 godzina','pricing.extra.note':'Elastyczne rozszerzenie sesji',
+      'contact.tagline':'Każde wielkie zdjęcie zaczyna się od <strong>rozmowy</strong>. Napisz do mnie — chętnie poznam Twoją historię.',
+      'footer.copy':'© 2026 Fotograf. Wszystkie prawa zastrzeżone.'
+    },
+    ru: {
+      'nav.about':'О себе','nav.portfolio':'Портфолио','nav.services':'Услуги','nav.reviews':'Отзывы','nav.contact':'Контакт',
+      'about.eyebrow':'Фотограф & Художник','about.title':'Привет, я<br><em>Екатерина</em>',
+      'about.p1':'Я фотограф с страстью к моментам, которые нельзя вернуть. Более 2 лет я сопровождаю людей в особых событиях их жизни — дни рождения, студийные сессии, портреты и городские съёмки.',
+      'about.p2':'Я верю, что каждое фото — это не просто картинка, а эмоция, замкнутая в кадре навсегда. Я не режиссирую — я наблюдаю, жду и ловлю момент, который говорит больше тысячи слов.',
+      'about.p3':'Мне уже доверились более 200 довольных клиентов. Позволь, твоя история станет следующей красивой главой в моём объективе.',
+      'about.cta':'Поговорим','about.tag':'Года страсти',
+      'stat.years':'Года опыта','stat.clients':'Клиентов','stat.photos':'Фотографий','stat.sessions':'Сессий',
+      'pricing.hint':'Нажмите для деталей ↗',
+      'hero.eyebrow':'Профессиональная фотография',
+      'hero.title':'Твоя история заслуживает<br><em>идеальных снимков</em>',
+      'hero.subtitle':'Каждый момент уникален. Я запечатляю его с страстью, точностью и художественным чутьём — чтобы ты мог возвращаться к нему всю жизнь.',
+      'hero.cta':'Смотреть портфолио',
+      'section.portfolio':'Портфолио','section.services':'Услуги',
+      'section.pricing':'Прайс-лист','section.reviews':'Отзывы','section.contact':'Контакт',
+      'service.wedding.title':'Свадьбы',
+      'service.wedding.desc':'От подготовки до последнего танца — запечатляю каждую эмоцию вашего особенного дня с неповторимой нежностью и точностью.',
+      'service.birthday.title':'Дни рождения',
+      'service.birthday.desc':'Ваш день рождения — особый повод. Сохраню радость, смех и тепло моментов, которые вы будете вспоминать годами.',
+      'service.studio.title':'Студия',
+      'service.studio.desc':'Профессиональные условия, креативное освещение и индивидуальный подход. Студийная сессия, которая раскроет в вас лучшее.',
+      'service.street.title':'Уличная съёмка',
+      'service.street.desc':'Живая атмосфера города, естественный свет и настоящие эмоции. Уличная фотосессия — ваша история на фоне городского ритма.',
+      'service.btn':'Запросить цену',
+      'pricing.basic.label':'Базовый пакет','pricing.basic.name':'1 час','pricing.basic.note':'Идеально для портретной съёмки',
+      'pricing.standard.label':'Стандартный пакет','pricing.standard.name':'2 часа','pricing.standard.note':'Семейная или предметная съёмка',
+      'pricing.extra.label':'Каждый следующий','pricing.extra.name':'+1 час','pricing.extra.note':'Гибкое расширение сессии',
+      'contact.tagline':'Каждый великий снимок начинается с <strong>разговора</strong>. Напишите мне — с удовольствием узнаю вашу историю.',
+      'footer.copy':'© 2026 Фотограф. Все права защищены.'
+    },
+    uk: {
+      'nav.about':'Про мене','nav.portfolio':'Портфоліо','nav.services':'Послуги','nav.reviews':'Відгуки','nav.contact':'Контакт',
+      'about.eyebrow':'Фотограф & Художниця','about.title':'Привіт, я<br><em>Катерина</em>',
+      'about.p1':'Я фотограф із пристрастю до моментів, які не можна повернути. Понад 2 роки я супроводжую людей у особливих подіях — дні народження, студійні сесії, портрети та вуличні зйомки.',
+      'about.p2':'Я вірю, що кожне фото — це не просто зображення, а емоція, замкнена в кадрі назавжди. Я не режисирую — спостерігаю, чекаю і ловлю момент, що говорить більше тисячі слів.',
+      'about.p3':'Мені вже довірилися понад 200 задоволених клієнтів. Дозволь, твоя історія стане наступним гарним розділом у моєму об\'єктиві.',
+      'about.cta':'Поговоримо','about.tag':'Роки пристрасті',
+      'stat.years':'Роки досвіду','stat.clients':'Клієнтів','stat.photos':'Фотографій','stat.sessions':'Сесій',
+      'pricing.hint':'Натисніть для деталей ↗',
+      'hero.eyebrow':'Професійна фотографія',
+      'hero.title':'Твоя історія заслуговує<br><em>ідеальних знімків</em>',
+      'hero.subtitle':'Кожен момент унікальний. Я фіксую його з пристрастю, точністю і художнім чуттям — щоб ти міг повертатися до нього все життя.',
+      'hero.cta':'Дивитись портфоліо',
+      'section.portfolio':'Портфоліо','section.services':'Послуги',
+      'section.pricing':'Прайс-лист','section.contact':'Контакт',
+      'service.wedding.title':'Весілля',
+      'service.wedding.desc':'Від підготовки до останнього танцю — документую кожну емоцію вашого особливого дня з неповторною ніжністю та точністю.',
+      'service.birthday.title':'Дні народження',
+      'service.birthday.desc':'Ваш день народження — особлива нагода. Збережу радість, сміх і тепло моментів, які ви будете згадувати роками.',
+      'service.studio.title':'Студія',
+      'service.studio.desc':'Професійні умови, творче освітлення та індивідуальний підхід. Студійна сесія, яка розкриє у вас найкраще.',
+      'service.street.title':'Вулична зйомка',
+      'service.street.desc':'Жива атмосфера міста, природне світло і справжні емоції. Вулична фотосесія — ваша історія на тлі міського ритму.',
+      'service.btn':'Запитати ціну',
+      'pricing.basic.label':'Базовий пакет','pricing.basic.name':'1 година','pricing.basic.note':'Ідеально для портретної зйомки',
+      'pricing.standard.label':'Стандартний пакет','pricing.standard.name':'2 години','pricing.standard.note':'Сімейна або предметна зйомка',
+      'pricing.extra.label':'Кожна наступна','pricing.extra.name':'+1 година','pricing.extra.note':'Гнучке розширення сесії',
+      'contact.tagline':'Кожен великий знімок починається з <strong>розмови</strong>. Напишіть мені — залюбки дізнаюся вашу історію.',
+      'footer.copy':'© 2026 Фотограф. Всі права захищені.'
+    },
+    en: {
+      'nav.about':'About me','nav.portfolio':'Portfolio','nav.services':'Services','nav.reviews':'Reviews','nav.contact':'Contact',
+      'about.eyebrow':'Photographer & Artist','about.title':'Hi, I\'m<br><em>Katarzyna</em>',
+      'about.p1':'I am a photographer with a passion for moments that cannot be undone. For over 2 years I have been with people at special moments in their lives — birthdays, studio sessions, portraits and urban shoots.',
+      'about.p2':'I believe every photo is not just an image — it is an emotion locked in a frame forever. I do not direct — I observe, wait and catch the moment that speaks more than a thousand words.',
+      'about.p3':'Over 200 happy clients have already trusted me. Let your story become the next beautiful chapter in my lens.',
+      'about.cta':'Let\'s talk','about.tag':'Years of passion',
+      'stat.years':'Years of experience','stat.clients':'Clients','stat.photos':'Photos','stat.sessions':'Sessions',
+      'pricing.hint':'Click for details ↗',
+      'hero.eyebrow':'Professional Photography',
+      'hero.title':'Your story deserves<br><em>perfect photos</em>',
+      'hero.subtitle':'Every moment is unique. I capture it with passion, precision and artistic sensibility — so you can return to it for a lifetime.',
+      'hero.cta':'View portfolio',
+      'section.portfolio':'Portfolio','section.services':'Services',
+      'section.pricing':'Pricing','section.contact':'Contact',
+      'service.wedding.title':'Weddings',
+      'service.wedding.desc':'From preparations to the last dance — I document every emotion of your special day with unique tenderness and precision.',
+      'service.birthday.title':'Birthdays',
+      'service.birthday.desc':'Your birthday is a special occasion. I will preserve the joy, laughter and warmth of moments you will cherish for years.',
+      'service.studio.title':'Studio',
+      'service.studio.desc':'Professional conditions, creative lighting and an individual approach. A studio session that brings out the best in you.',
+      'service.street.title':'Street photography',
+      'service.street.desc':'The vivid atmosphere of the city, natural light and genuine emotions. A street shoot — your story against the urban backdrop.',
+      'service.btn':'Ask for a quote',
+      'pricing.basic.label':'Basic package','pricing.basic.name':'1 hour','pricing.basic.note':'Perfect for a portrait session',
+      'pricing.standard.label':'Standard package','pricing.standard.name':'2 hours','pricing.standard.note':'Family or product session',
+      'pricing.extra.label':'Each additional','pricing.extra.name':'+1 hour','pricing.extra.note':'Flexible session extension',
+      'contact.tagline':'Every great photo starts with a <strong>conversation</strong>. Write to me — I would love to hear your story.',
+      'footer.copy':'© 2026 Photographer. All rights reserved.'
+    }
+  };
+
+  let currentLang = 'pl';
+
+  function applyLang(lang) {
+    currentLang = lang;
+    const dict = i18n[lang];
+    if (!dict) return;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] === undefined) return;
+      if (el.classList.contains('word-animate')) {
+        const wasVisible = el.classList.contains('words-visible');
+        el.classList.remove('words-visible');
+        const words = dict[key].split(/\s+/);
+        el.innerHTML = words.map((w, i) =>
+          `<span class="word" style="transition-delay:${(i * 0.055).toFixed(2)}s">${w}</span>`
+        ).join(' ');
+        if (wasVisible) requestAnimationFrame(() => el.classList.add('words-visible'));
+      } else {
+        el.textContent = dict[key];
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+
+    const labelMap = { pl:'PL', ru:'RU', uk:'UA', en:'EN' };
+    const labelEl = document.getElementById('lang-label');
+    if (labelEl) labelEl.textContent = labelMap[lang] || lang.toUpperCase();
+    document.querySelectorAll('.lang-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+  }
+
+  // Language dropdown
+  const langToggle = document.getElementById('lang-toggle');
+  const langDropdown = document.getElementById('lang-dropdown');
+  if (langToggle && langDropdown) {
+    langToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+    langDropdown.addEventListener('click', e => e.stopPropagation());
+    langDropdown.querySelectorAll('.lang-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyLang(btn.dataset.lang);
+        langDropdown.classList.remove('open');
+      });
+    });
+  }
+
+  // ── THEME SWITCHER ────────────────────────────────────────────────────────
+  const themeToggle = document.getElementById('theme-toggle');
+  let isDark = true;
+
+  function applyThemeCursor(dark) {
+    const cur = document.getElementById('custom-cursor');
+    if (!cur) return;
+    const color = dark ? 'rgba(201,168,76,0.8)' : 'rgba(139,90,43,0.82)';
+    cur.style.background = color;
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      isDark = !isDark;
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      applyThemeCursor(isDark);
+    });
+  }
+
+});
+</script>
+</body>
+</html>
