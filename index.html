@@ -1418,9 +1418,11 @@
 
       .portfolio-grid {
         grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: none;
         height: auto;
         min-height: unset;
       }
+      .portfolio-card { min-height: 220px; }
 
       .services-cards {
         grid-template-columns: repeat(2, 1fr);
@@ -1447,7 +1449,8 @@
     }
 
     @media (max-width: 540px) {
-      .portfolio-grid { grid-template-columns: 1fr; height: auto; }
+      .portfolio-grid { grid-template-columns: 1fr; grid-template-rows: none; height: auto; }
+      .portfolio-card { min-height: 200px; }
       .services-cards { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
       .reviews-grid { grid-template-columns: 1fr; }
       .about__stats { grid-template-columns: repeat(2, 1fr); }
