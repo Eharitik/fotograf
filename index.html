@@ -1255,7 +1255,7 @@
       line-height: 1.9;
       margin-bottom: 18px;
     }
-    .about__cta { margin-top: 36px; }
+    .about__cta { margin-top: 36px; text-align: center; }
 
     /* Word-by-word animation */
     .word-animate .word {
@@ -1451,6 +1451,8 @@
     @media (max-width: 540px) {
       .portfolio-grid { grid-template-columns: 1fr; grid-template-rows: none; height: auto; }
       .portfolio-card { min-height: 200px; }
+      .word-animate .word { transform: none; transition: opacity 0.4s ease; }
+      .word-animate.words-visible .word { opacity: 1; transform: none; }
       .services-cards { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
       .reviews-grid { grid-template-columns: 1fr; }
       .about__stats { grid-template-columns: repeat(2, 1fr); }
@@ -1948,11 +1950,11 @@
               </div>
             </a>
 
-            <a href="https://instagram.com/photographer.pl" target="_blank" rel="noopener noreferrer" class="contact-item">
+            <a href="https://instagram.com/persan.photo" target="_blank" rel="noopener noreferrer" class="contact-item">
               <div class="contact-item__icon" aria-hidden="true">📷</div>
               <div>
                 <p class="contact-item__label">Instagram</p>
-                <p class="contact-item__value">@photographer.pl</p>
+                <p class="contact-item__value">@persan.photo</p>
               </div>
             </a>
 
