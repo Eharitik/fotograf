@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1633,7 +1633,7 @@
             </div>
           </div>
           <!-- Theme switcher -->
-          <button class="ctrl-btn" id="theme-toggle" title="Zmień motyw">☀️</button>
+          <button class="ctrl-btn" id="theme-toggle" title="Zmień motyw">🌙</button>
         </div>
       </div>
     </div>
@@ -2634,7 +2634,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── THEME SWITCHER ────────────────────────────────────────────────────────
   const themeToggle = document.getElementById('theme-toggle');
-  let isDark = true;
+  let isDark = false;
 
   function applyThemeCursor(dark) {
     const cur = document.getElementById('custom-cursor');
